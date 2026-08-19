@@ -5,12 +5,13 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: #120b05;
+  background: radial-gradient(circle, #1c120a 0%, #0a0705 100%);
   cursor: default; /* Constant map */
   box-shadow: inset 0 0 120px rgba(0, 0, 0, 0.95);
   display: flex;
   align-items: center;
   justify-content: center;
+  perspective: 1500px; /* Enable 3D space for folding effect */
 }
 
 /* Constant Map Wrapper */
@@ -18,20 +19,203 @@
   position: relative;
   width: 100%;
   height: 100%;
-  max-width: 1200px;
-  max-height: 800px;
   aspect-ratio: 4 / 3;
   margin: auto;
-  transform: none !important; /* Keep map constant */
+  transform-style: preserve-3d;
+  transition: max-width 4.5s cubic-bezier(0.25, 1, 0.3, 1),
+              max-height 4.5s cubic-bezier(0.25, 1, 0.3, 1),
+              transform 4.5s cubic-bezier(0.25, 1, 0.3, 1),
+              opacity 1.5s ease;
+  opacity: 0;
+  pointer-events: none;
 }
 
-/* Historical Map Image - Constant background */
+/* Closed State (sliding/rolled scroll) */
+.map-container:not(.unfolded) .map-wrapper {
+  max-width: 600px;
+  max-height: 96px;
+  transform: scale(0.9) rotateX(15deg) translateX(-150vw);
+}
+
+/* Slide-in State with floating 3D animation */
+.map-container:not(.unfolded) .map-wrapper.slide-in {
+  opacity: 1;
+  pointer-events: auto;
+  animation: closedScrollFloat 4s ease-in-out infinite;
+}
+
+/* 3D hover/tilt effect when closed */
+.map-container:not(.unfolded) .map-wrapper.slide-in:hover {
+  animation: none; /* pause floating on hover for precise tilt */
+  transform: scale(0.92) rotateX(18deg) translateY(-4px);
+  box-shadow: 0 15px 40px rgba(243, 156, 18, 0.15);
+}
+
+/* Unfolded State (Opened Map with majestic 3D unrolling animation) */
+.map-container.unfolded .map-wrapper {
+  max-width: 1200px;
+  max-height: 800px;
+  opacity: 1;
+  pointer-events: auto;
+  animation: unroll3D 4.5s cubic-bezier(0.25, 1, 0.3, 1) forwards;
+}
+
+/* Ancient Parchment Folding Flaps Overlay (Opens Vertically via Rolling) */
+.map-fold-flap {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  z-index: 150; /* Above map contents */
+  transition: height 4.5s cubic-bezier(0.25, 1, 0.3, 1), opacity 3.0s ease, visibility 0s linear;
+  pointer-events: none;
+  transform-style: preserve-3d;
+  visibility: visible;
+}
+
+.flap-top {
+  top: 0;
+  height: 50%;
+}
+
+.flap-bottom {
+  bottom: 0;
+  height: 50%;
+}
+
+/* Transition to shrink height to 0 to unroll the map */
+.map-container.unfolded .flap-top {
+  height: 0;
+  opacity: 0;
+}
+
+.map-container.unfolded .flap-bottom {
+  height: 0;
+  opacity: 0;
+}
+
+.map-container.unfolded .map-fold-flap {
+  visibility: hidden;
+  transition-delay: 0s, 0s, 4.5s; /* Wait for animation to finish before hiding */
+}
+
+/* Flap parchment texture */
+.flap-texture {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.flap-top .flap-texture {
+  background: linear-gradient(to bottom, 
+    #ebd9b4 0%, 
+    #dfcba0 30%, 
+    #ccb78b 70%, 
+    #bfa87a 100%
+  );
+  border: 3px solid #b78103;
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+  box-shadow: inset 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.flap-bottom .flap-texture {
+  background: linear-gradient(to top, 
+    #ebd9b4 0%, 
+    #dfcba0 30%, 
+    #ccb78b 70%, 
+    #bfa87a 100%
+  );
+  border: 3px solid #b78103;
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+  box-shadow: inset 0 -10px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* Rolling Scroll Cylinders */
+.scroll-roll-cylinder {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 48px;
+  z-index: 160;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+  transform-style: preserve-3d;
+  transition: transform 4.5s cubic-bezier(0.25, 1, 0.3, 1);
+}
+
+.roll-top-cylinder {
+  bottom: -24px; /* Centered on the seam */
+  background: linear-gradient(to bottom, 
+    #2b180a 0%, 
+    #5d3b1e 25%, 
+    #ffd700 50%, 
+    #5d3b1e 75%, 
+    #2b180a 100%
+  );
+  border-top: 2px solid #b78103;
+  border-bottom: 2px solid #b78103;
+}
+
+.roll-bottom-cylinder {
+  top: -24px; /* Centered on the seam */
+  background: linear-gradient(to bottom, 
+    #2b180a 0%, 
+    #5d3b1e 25%, 
+    #ffd700 50%, 
+    #5d3b1e 75%, 
+    #2b180a 100%
+  );
+  border-top: 2px solid #b78103;
+  border-bottom: 2px solid #b78103;
+}
+
+/* Spin animation for rolling effect */
+.map-container.unfolded .roll-top-cylinder {
+  transform: rotateX(-1440deg);
+}
+
+.map-container.unfolded .roll-bottom-cylinder {
+  transform: rotateX(1440deg);
+}
+
+/* Wooden Knobs / Handles at the ends of cylinders */
+.scroll-roll-cylinder::before {
+  content: "";
+  position: absolute;
+  left: -18px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 32px;
+  background: radial-gradient(circle at left, #ffd700, #8a640f 70%, #2b1d0a 100%);
+  border-radius: 6px 0 0 6px;
+  box-shadow: -3px 3px 6px rgba(0, 0, 0, 0.5);
+}
+
+.scroll-roll-cylinder::after {
+  content: "";
+  position: absolute;
+  right: -18px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 32px;
+  background: radial-gradient(circle at right, #ffd700, #8a640f 70%, #2b1d0a 100%);
+  border-radius: 0 6px 6px 0;
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+}
+
+/* Historical Map Image - Constant background with bright golden tint (unshaded) */
 .map-bg-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
-  filter: sepia(0.3) contrast(1.12) brightness(0.95);
+  filter: sepia(1.0) saturate(2.2) contrast(1.08) brightness(1.02) hue-rotate(-8deg);
   border-radius: 4px;
   box-shadow: 0 0 50px rgba(0, 0, 0, 0.9);
 }
@@ -275,6 +459,17 @@
   text-align: center;
   max-width: 500px;
   width: 85%;
+  transition: opacity 1.5s ease;
+}
+
+.map-container:not(.unfolded) .parchment-scroll-banner {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.map-container.unfolded .parchment-scroll-banner {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .scroll-quote {
@@ -305,6 +500,17 @@
   z-index: 30;
   font-family: var(--font-heading);
   font-size: 0.75rem;
+  transition: opacity 1.5s ease;
+}
+
+.map-container:not(.unfolded) .map-footer-bar {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.map-container.unfolded .map-footer-bar {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .bar-item {
@@ -325,4 +531,90 @@
 .prompt-item {
   color: #c9bba8;
   font-style: italic;
+}
+
+/* Fade in map components only when unfolded */
+.map-container:not(.unfolded) .map-bg-img,
+.map-container:not(.unfolded) .map-svg-overlay,
+.map-container:not(.unfolded) .map-pin {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1.5s ease;
+}
+
+.map-container.unfolded .map-bg-img,
+.map-container.unfolded .map-svg-overlay,
+.map-container.unfolded .map-pin {
+  opacity: 1;
+  pointer-events: auto;
+  transition: opacity 2.5s ease 2.0s; /* fade in slowly after scroll opens */
+}
+
+/* Small Touch Button */
+.scroll-touch-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  padding: 0.5rem 1.6rem;
+  font-family: 'Cinzel Decorative', 'Cinzel', serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #ffffff;
+  background: radial-gradient(circle, #f39c12 0%, #b78103 100%);
+  border: 1.5px solid #ffd700;
+  border-radius: 20px;
+  box-shadow: 0 0 10px rgba(243, 156, 18, 0.65), inset 0 0 6px rgba(255, 255, 255, 0.35);
+  cursor: pointer;
+  opacity: 0;
+  z-index: 310; /* Above cylinders */
+  pointer-events: none;
+  transition: opacity 0.8s ease 1.8s, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.map-wrapper.slide-in ~ .scroll-touch-btn {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+  pointer-events: auto;
+}
+
+.map-container.unfolded .scroll-touch-btn {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.8);
+  pointer-events: none;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.scroll-touch-btn:hover {
+  transform: translate(-50%, -50%) scale(1.05);
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.85), inset 0 0 8px rgba(255, 255, 255, 0.45);
+}
+
+/* --- 3D ANIMATION KEYFRAMES --- */
+
+/* Slow 3D floating animation for closed scroll */
+@keyframes closedScrollFloat {
+  0%, 100% {
+    transform: scale(0.9) rotateX(15deg) translateY(0);
+  }
+  50% {
+    transform: scale(0.9) rotateX(18deg) translateY(-6px);
+  }
+}
+
+/* Majestic 3D tilting unroll animation */
+@keyframes unroll3D {
+  0% {
+    transform: scale(0.9) rotateX(15deg) rotateY(-15deg) rotateZ(2deg);
+  }
+  35% {
+    transform: scale(0.94) rotateX(26deg) rotateY(10deg) rotateZ(-3deg);
+  }
+  70% {
+    transform: scale(0.98) rotateX(-8deg) rotateY(-5deg) rotateZ(1deg);
+  }
+  100% {
+    transform: scale(1) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+  }
 }

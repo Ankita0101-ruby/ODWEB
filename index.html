@@ -42,18 +42,27 @@
     <!-- VIEW 1: INTERACTIVE CONSTANT HISTORICAL MAP -->
     <section id="map-view" class="view-section active">
       <div class="map-container" id="map-container">
-        
+
         <!-- Constant Parchment Map Graphic Frame -->
         <div class="map-wrapper" id="map-wrapper">
+          <!-- 3D Parchment Folding Flaps Overlay (Opens Vertically) -->
+          <div class="map-fold-flap flap-top">
+            <div class="flap-texture"></div>
+            <div class="scroll-roll-cylinder roll-top-cylinder"></div>
+          </div>
+          <div class="map-fold-flap flap-bottom">
+            <div class="flap-texture"></div>
+            <div class="scroll-roll-cylinder roll-bottom-cylinder"></div>
+          </div>
           <img src="/images/historical_map_bg.jpg" alt="The Odyssey Journey to Innovation Hand Drawn Map" class="map-bg-img" draggable="false">
 
           <!-- SVG Overlay for Clean Brown Foot Path Trail -->
           <svg class="map-svg-overlay" viewBox="0 0 1000 600" preserveAspectRatio="none">
             <defs>
               <linearGradient id="brownFootGlow" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#8e5a2b" stop-opacity="1" />
-                <stop offset="50%" stop-color="#5c3a1b" stop-opacity="1" />
-                <stop offset="100%" stop-color="#3d240e" stop-opacity="1" />
+                <stop offset="0%" stop-color="#ffd700" stop-opacity="1" />
+                <stop offset="50%" stop-color="#f39c12" stop-opacity="1" />
+                <stop offset="100%" stop-color="#b78103" stop-opacity="1" />
               </linearGradient>
             </defs>
 
@@ -216,6 +225,9 @@
             <span>✨ Constant Parchment Map &bull; Click symbols serially (I &rarr; II &rarr; III &rarr; IV &rarr; V)</span>
           </div>
         </div>
+
+        <!-- Small Touch Button for Unrolling Map -->
+        <button class="scroll-touch-btn" id="scroll-touch-btn">Touch</button>
 
       </div><!-- /.map-container -->
     </section>

@@ -19,6 +19,28 @@ class OdysseyApp {
       this.handleSymbolClick(symbolId);
     });
 
+    // 1.1 Closed Scroll Trigger to open map (clicking on Touch button unrolls it vertically)
+    const mapContainer = document.getElementById('map-container');
+    const mapWrapper = document.getElementById('map-wrapper');
+    const touchBtn = document.getElementById('scroll-touch-btn');
+
+    // Trigger entrance slide-in animation for the actual cylindrical closed scroll (mapWrapper)
+    setTimeout(() => {
+      mapWrapper?.classList.add('slide-in');
+    }, 200);
+
+    const openMap = () => {
+      if (mapContainer && !mapContainer.classList.contains('unfolded')) {
+        audioSystem.playTriumph();
+        mapContainer.classList.add('unfolded');
+      }
+    };
+
+    touchBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openMap();
+    });
+
     // 2. Setup Top Header Nav Pill Click Handlers
     const navPills = document.querySelectorAll('.symbol-nav .nav-pill');
     navPills.forEach(pill => {
@@ -220,6 +242,14 @@ class OdysseyApp {
   openSymbolPage(symbolId, updateHash = true) {
     const data = SYMBOLS_DATA[symbolId];
     if (!data) return;
+
+    // Auto-unfold map container if navigating directly to a subpage
+    const mapContainer = document.getElementById('map-container');
+    const mapWrapper = document.getElementById('map-wrapper');
+    if (mapContainer && !mapContainer.classList.contains('unfolded')) {
+      mapContainer.classList.add('unfolded');
+      mapWrapper?.classList.add('slide-in');
+    }
 
     this.currentSymbolId = symbolId;
     this.activeTab = 'lore';
@@ -911,36 +941,39 @@ class OdysseyApp {
             <!-- Supreme Leadership KPI Cards (Cards 1, 2, 3) -->
             <div class="legion-high-grid">
               <!-- KPI Card 1: The High King -->
-              <div class="legion-kpi-card high-king-card">
-                <div class="legion-crown-badge">👑 SUPREME COMMAND</div>
-                <div class="legion-avatar-wrap">
-                  <span class="legion-icon">👑</span>
+              <div class="legion-kpi-card high-king-card has-photo">
+                <div class="card-photo-side">
+                  <img src="/images/high_king.jpg" alt="Manmath Biswal" class="vanguard-photo">
                 </div>
-                <h2 class="legion-card-title">The High King</h2>
-                <div class="legion-name">Manmath Biswal</div>
-                <div class="legion-role">Chairman</div>
+                <div class="card-text-side">
+                  <h2 class="legion-card-title">The High King</h2>
+                  <div class="legion-name">Manmath Biswal</div>
+                  <div class="legion-role">Chairman</div>
+                </div>
               </div>
 
               <!-- KPI Card 2: The Commander -->
-              <div class="legion-kpi-card commander-card">
-                <div class="legion-crown-badge">⚔️ EVENT CONVENOR</div>
-                <div class="legion-avatar-wrap">
-                  <span class="legion-icon">🛡️</span>
+              <div class="legion-kpi-card commander-card has-photo">
+                <div class="card-photo-side">
+                  <img src="/images/commander.jpg" alt="Jyoti Ranjan Rout" class="vanguard-photo">
                 </div>
-                <h2 class="legion-card-title">The Commander</h2>
-                <div class="legion-name">Jyoti Ranjan Rout</div>
-                <div class="legion-role">The Convenor</div>
+                <div class="card-text-side">
+                  <h2 class="legion-card-title">The Commander</h2>
+                  <div class="legion-name">Jyoti Ranjan Rout</div>
+                  <div class="legion-role">The Convenor</div>
+                </div>
               </div>
 
               <!-- KPI Card 3: The Sovereign Queen -->
-              <div class="legion-kpi-card queen-card">
-                <div class="legion-crown-badge">🔱 FACULTY ADVISOR</div>
-                <div class="legion-avatar-wrap">
-                  <span class="legion-icon">👑</span>
+              <div class="legion-kpi-card queen-card has-photo">
+                <div class="card-photo-side">
+                  <img src="/images/suhasini_queen.jpg" alt="Suhasini Choudhury" class="vanguard-photo">
                 </div>
-                <h2 class="legion-card-title">The Sovereign Queen</h2>
-                <div class="legion-name">MAM</div>
-                <div class="legion-role">The Faculty Incharge</div>
+                <div class="card-text-side">
+                  <h2 class="legion-card-title">The Sovereign Queen</h2>
+                  <div class="legion-name">Suhasini Choudhury</div>
+                  <div class="legion-role">The Faculty Incharge</div>
+                </div>
               </div>
             </div>
 
@@ -1101,6 +1134,36 @@ class OdysseyApp {
       audioSystem.playClick();
       this.showMapView();
     });
+
+    // Intersection Observer for Vanguard Cards Deck Spread animation
+    const vanguardGrid = container.querySelector('.vanguard-kpi-grid');
+    if (vanguardGrid) {
+      const vanguardObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            vanguardGrid.classList.add('spread');
+          } else {
+            vanguardGrid.classList.remove('spread');
+          }
+        });
+      }, { threshold: 0.15 });
+      vanguardObserver.observe(vanguardGrid);
+    }
+
+    // Intersection Observer for Supreme Leadership Cards (Commander and Queen sliding in from sides)
+    const highGrid = container.querySelector('.legion-high-grid');
+    if (highGrid) {
+      const highObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            highGrid.classList.add('slide-in');
+          } else {
+            highGrid.classList.remove('slide-in');
+          }
+        });
+      }, { threshold: 0.15 });
+      highObserver.observe(highGrid);
+    }
   }
 
   /* ─── Trigger Weapon Arrow Flight & Open Registration Modal ─── */
