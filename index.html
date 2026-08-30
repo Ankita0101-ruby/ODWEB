@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=1200">
   <title>The Odyssey — Journey to Innovation</title>
   <meta name="description" content="An interactive constant historical map featuring a progressive brown foot path trail that unlocks serially.">
   
@@ -54,7 +54,9 @@
             <div class="flap-texture"></div>
             <div class="scroll-roll-cylinder roll-bottom-cylinder"></div>
           </div>
-          <img src="/images/historical_map_bg.jpg" alt="The Odyssey Journey to Innovation Hand Drawn Map" class="map-bg-img" draggable="false">
+          <video autoplay loop muted playsinline class="map-bg-img">
+            <source src="/Video Project 9.mp4" type="video/mp4">
+          </video>
 
           <!-- SVG Overlay for Clean Brown Foot Path Trail -->
           <svg class="map-svg-overlay" viewBox="0 0 1000 600" preserveAspectRatio="none">
@@ -94,6 +96,7 @@
                 </svg>
               </div>
             </div>
+            <div class="pin-click-label">Click Here</div>
             <div class="pin-tooltip">
               <div class="tooltip-header">
                 <span class="tooltip-tag">Step I • Active Start</span>
@@ -102,7 +105,7 @@
               <p class="tooltip-desc">Click to visit Symbol I and reveal the brown foot path to Symbol II!</p>
               <div class="tooltip-footer">
                 <span class="coords-badge">37°58'N 23°43'E</span>
-                <span class="action-prompt">Explore Realm I &rarr;</span>
+                <span class="action-prompt">Click Here &rarr;</span>
               </div>
             </div>
           </div>
@@ -205,7 +208,6 @@
               </div>
             </div>
           </div>
-
         </div><!-- /.map-wrapper -->
 
         <!-- Scroll Banner for JOURNEY TO INNOVATION -->
@@ -215,16 +217,6 @@
           </div>
         </div>
 
-        <!-- Map Bottom Information Bar -->
-        <div class="map-footer-bar">
-          <div class="bar-item">
-            <span class="bar-label">FOOT PATH TRAIL:</span>
-            <span class="bar-value" id="trail-status-text">Step 1 of 5 Unlocked — Click Symbol I to start trail</span>
-          </div>
-          <div class="bar-item prompt-item">
-            <span>✨ Constant Parchment Map &bull; Click symbols serially (I &rarr; II &rarr; III &rarr; IV &rarr; V)</span>
-          </div>
-        </div>
 
         <!-- Small Touch Button for Unrolling Map -->
         <button class="scroll-touch-btn" id="scroll-touch-btn">Touch</button>

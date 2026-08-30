@@ -3,9 +3,10 @@
 class OdysseyAudioSystem {
   constructor() {
     this.ctx = null;
-    this.isMuted = true;
+    this.isMuted = false;
     this.ambientOsc = null;
     this.waveGain = null;
+    this.bgMusic = null;
   }
 
   init() {
@@ -20,9 +21,54 @@ class OdysseyAudioSystem {
     }
   }
 
+  playBackgroundMusic() {
+    if (!this.bgMusic) {
+      this.bgMusic = new Audio('/bg-music.mp3');
+      this.bgMusic.loop = true;
+      this.bgMusic.volume = 0.45;
+    }
+
+    const startPlay = () => {
+      this.init();
+      if (this.bgMusic.paused) {
+        this.bgMusic.play()
+          .then(() => {
+            console.log("Background music started successfully.");
+            cleanup();
+          })
+          .catch(err => {
+            console.warn("Autoplay prevented or failed, waiting for user interaction:", err);
+          });
+      } else {
+        cleanup();
+      }
+    };
+
+    const cleanup = () => {
+      document.removeEventListener('click', startPlay);
+      document.removeEventListener('touchstart', startPlay);
+      document.removeEventListener('keydown', startPlay);
+    };
+
+    // Try playing immediately
+    startPlay();
+
+    // Set up user interaction listeners in case autoplay is blocked by browser
+    document.addEventListener('click', startPlay);
+    document.addEventListener('touchstart', startPlay);
+    document.addEventListener('keydown', startPlay);
+  }
+
   toggleSound() {
     this.init();
     this.isMuted = !this.isMuted;
+    if (this.bgMusic) {
+      if (this.isMuted) {
+        this.bgMusic.pause();
+      } else {
+        this.bgMusic.play().catch(e => console.warn("Error resuming bgMusic:", e));
+      }
+    }
     if (!this.isMuted) {
       this.playLyreArpeggio();
     }
@@ -31,56 +77,14 @@ class OdysseyAudioSystem {
 
   // Play crisp golden button click sound
   playClick() {
-    if (this.isMuted || !this.ctx) return;
-    try {
-      const osc = this.ctx.createOscillator();
-      const gain = this.ctx.createGain();
-      
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(880, this.ctx.currentTime); // A5
-      osc.frequency.exponentialRampToValueAtTime(1760, this.ctx.currentTime + 0.08); // A6
-      
-      gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.08);
-      
-      osc.connect(gain);
-      gain.connect(this.ctx.destination);
-      
-      osc.start();
-      osc.stop(this.ctx.currentTime + 0.08);
-    } catch (e) {
-      console.warn("Audio error:", e);
-    }
+    // Click sound effect disabled as requested
+    return;
   }
 
   // Play ancient Greek lyre harp arpeggio sound
   playLyreArpeggio() {
-    if (this.isMuted || !this.ctx) return;
-    try {
-      // Pentatonic ancient Greek mode frequencies (D Dorian: D4, F4, G4, A4, C5, D5)
-      const freqs = [293.66, 349.23, 392.00, 440.00, 523.25, 587.33];
-      freqs.forEach((freq, index) => {
-        setTimeout(() => {
-          if (this.isMuted) return;
-          const osc = this.ctx.createOscillator();
-          const gain = this.ctx.createGain();
-          
-          osc.type = 'triangle'; // Warmer harp-like tone
-          osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
-          
-          gain.gain.setValueAtTime(0.12, this.ctx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 1.2);
-          
-          osc.connect(gain);
-          gain.connect(this.ctx.destination);
-          
-          osc.start();
-          osc.stop(this.ctx.currentTime + 1.2);
-        }, index * 120);
-      });
-    } catch (e) {
-      console.warn("Audio error:", e);
-    }
+    // Lyre arpeggio sound effect disabled as requested
+    return;
   }
 
   // Play triumph fanfare for challenge completion

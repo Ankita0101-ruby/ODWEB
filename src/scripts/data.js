@@ -10,7 +10,7 @@ export const SYMBOLS_DATA = {
     coords: "37°58'N 23°43'E — Island of Circe & Open Sea",
     mapPos: { x: 18, y: 43 },
     heroImg: "/images/voyage_hero.jpg",
-    quote: "“Innovation is a voyage across wine-dark seas, guided by the stars of vision and driven by relentless curiosity...”",
+    quote: "“Every innovator must conquer the journey before their vision finds its home.”",
     quoteAuthor: "Journey to Innovation — Chapter I",
     overview: "The Voyage represents the courageous first step into uncharted territories. Like Odysseus navigating tempestuous waters and mythical sea gods, true innovation requires bold leadership, adaptive steering, and the resilience to conquer unknown challenges.",
     stats: [

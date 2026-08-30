@@ -14,6 +14,9 @@ class OdysseyApp {
   }
 
   init() {
+    // 0. Initialize Background Music
+    audioSystem.playBackgroundMusic();
+
     // 1. Initialize Interactive Map
     this.odysseyMap = new OdysseyMap('map-container', 'map-wrapper', (symbolId) => {
       this.handleSymbolClick(symbolId);
@@ -31,7 +34,7 @@ class OdysseyApp {
 
     const openMap = () => {
       if (mapContainer && !mapContainer.classList.contains('unfolded')) {
-        audioSystem.playTriumph();
+        // audioSystem.playTriumph(); // Disabled click sound on map scroll open
         mapContainer.classList.add('unfolded');
       }
     };
@@ -166,7 +169,11 @@ class OdysseyApp {
         const promptEl = pin?.querySelector('.action-prompt');
         if (promptEl) {
           promptEl.classList.remove('prompt-status');
-          promptEl.textContent = `Open Realm ${step} \u2192`;
+          if (id === 'voyage') {
+            promptEl.textContent = `Click Here \u2192`;
+          } else {
+            promptEl.textContent = `Open Realm ${step} \u2192`;
+          }
         }
       } else {
         pin?.classList.remove('unlocked');
@@ -589,14 +596,14 @@ class OdysseyApp {
       this.showMapView();
     });
 
-    // KPI Card Click audio / interaction feedback
-    const card1 = document.getElementById('kpi-card-1');
-    const card2 = document.getElementById('kpi-card-2');
-    [card1, card2].forEach(card => {
-      card?.addEventListener('click', () => {
-        audioSystem.playTriumph();
-      });
-    });
+    // KPI Card Click audio / interaction feedback disabled as requested
+    // const card1 = document.getElementById('kpi-card-1');
+    // const card2 = document.getElementById('kpi-card-2');
+    // [card1, card2].forEach(card => {
+    //   card?.addEventListener('click', () => {
+    //     audioSystem.playTriumph();
+    //   });
+    // });
   }
 
   /* ─── Realms: "Hackathon" Special Page ─── */
@@ -989,7 +996,7 @@ class OdysseyApp {
               <!-- Sub KPI Card 4A: HERA -->
               <div class="vanguard-kpi-card has-photo">
                 <div class="card-photo-side">
-                  <img src="/images/deepali_hera.jpg" alt="A.S. Deepali" class="vanguard-photo">
+                  <img src="/images/hera_new.jpg" alt="A.S. Deepali" class="vanguard-photo">
                 </div>
                 <div class="card-text-side">
                   <div class="vanguard-deity-badge">HERA</div>
@@ -1001,7 +1008,7 @@ class OdysseyApp {
               <!-- Sub KPI Card 4B: ATHENA -->
               <div class="vanguard-kpi-card has-photo">
                 <div class="card-photo-side">
-                  <img src="/images/ankita_athena.jpg" alt="Ankita Das" class="vanguard-photo">
+                  <img src="/images/athena_new.jpg" alt="Ankita Das" class="vanguard-photo">
                 </div>
                 <div class="card-text-side">
                   <div class="vanguard-deity-badge">ATHENA</div>
@@ -1013,7 +1020,7 @@ class OdysseyApp {
               <!-- Sub KPI Card 4C: APHRODITE -->
               <div class="vanguard-kpi-card has-photo">
                 <div class="card-photo-side">
-                  <img src="/images/bijayalaxmi_aphrodite.jpg" alt="Bijayalaxmi Swain" class="vanguard-photo">
+                  <img src="/images/aphrodite_new.jpg" alt="Bijayalaxmi Swain" class="vanguard-photo">
                 </div>
                 <div class="card-text-side">
                   <div class="vanguard-deity-badge">APHRODITE</div>
@@ -1025,7 +1032,7 @@ class OdysseyApp {
               <!-- Sub KPI Card 4D: KRATOS -->
               <div class="vanguard-kpi-card has-photo">
                 <div class="card-photo-side">
-                  <img src="/images/lawrence_kratos.jpg" alt="Lawrence Kumar Khamurai" class="vanguard-photo">
+                  <img src="/images/kratos_new.jpg" alt="Lawrence Kumar Khamurai" class="vanguard-photo">
                 </div>
                 <div class="card-text-side">
                   <div class="vanguard-deity-badge">KRATOS</div>
@@ -1037,7 +1044,7 @@ class OdysseyApp {
               <!-- Sub KPI Card 4E: HEPHAESTUS -->
               <div class="vanguard-kpi-card has-photo">
                 <div class="card-photo-side">
-                  <img src="/images/ariyan_hephaestus.jpg" alt="Ariyan S.S. Acharya" class="vanguard-photo">
+                  <img src="/images/hephaestus_new.jpg" alt="Ariyan S.S. Acharya" class="vanguard-photo">
                 </div>
                 <div class="card-text-side">
                   <div class="vanguard-deity-badge">HEPHAESTUS</div>
@@ -1049,7 +1056,7 @@ class OdysseyApp {
               <!-- Sub KPI Card 4F: POSEIDON -->
               <div class="vanguard-kpi-card has-photo poseidon-lead-card">
                 <div class="card-photo-side">
-                  <img src="/images/guru_gourav_panda.jpg" alt="Guru Gourav Panda" class="vanguard-photo">
+                  <img src="/images/poseidon_new.jpg" alt="Guru Gourav Panda" class="vanguard-photo">
                 </div>
                 <div class="card-text-side">
                   <div class="vanguard-deity-badge poseidon-badge">POSEIDON</div>
@@ -1068,59 +1075,75 @@ class OdysseyApp {
             <!-- Operational Squad KPI Cards (Cards 10 - 16) -->
             <div class="ops-kpi-grid">
               <!-- KPI Card 10 -->
-              <div class="ops-kpi-card">
-                <div class="ops-num">X</div>
-                <div class="ops-icon">💻</div>
-                <h3 class="ops-title">IRIS</h3>
-                <div class="ops-role">Web Developers</div>
+              <div class="ops-kpi-card has-photo">
+                <div class="card-photo-side">
+                  <img src="/images/iris_new.jpg" alt="IRIS" class="vanguard-photo">
+                </div>
+                <div class="card-text-side">
+                  <div class="ops-num">X</div>
+                  <h3 class="ops-title">IRIS</h3>
+                  <div class="ops-role">Web Developers</div>
+                </div>
               </div>
 
               <!-- KPI Card 11 -->
-              <div class="ops-kpi-card">
-                <div class="ops-num">XI</div>
-                <div class="ops-icon">🎬</div>
-                <h3 class="ops-title">HELIOS</h3>
-                <div class="ops-role">Media Production</div>
-              </div>
-
-              <!-- KPI Card 12 -->
-              <div class="ops-kpi-card">
-                <div class="ops-num">XII</div>
-                <div class="ops-icon">🎭</div>
-                <h3 class="ops-title">PANATHENAEA</h3>
-                <div class="ops-role">Cultural team</div>
+              <div class="ops-kpi-card has-photo">
+                <div class="card-photo-side">
+                  <img src="/images/helios_new.jpg" alt="HELIOS" class="vanguard-photo">
+                </div>
+                <div class="card-text-side">
+                  <div class="ops-num">XI</div>
+                  <h3 class="ops-title">HELIOS</h3>
+                  <div class="ops-role">Media Production</div>
+                </div>
               </div>
 
               <!-- KPI Card 13 -->
-              <div class="ops-kpi-card">
-                <div class="ops-num">XIII</div>
-                <div class="ops-icon">⚙️</div>
-                <h3 class="ops-title">ATLAS CORE</h3>
-                <div class="ops-role">Technical team</div>
+              <div class="ops-kpi-card has-photo">
+                <div class="card-photo-side">
+                  <img src="/images/atlas_new.jpg" alt="ATLAS CORE" class="vanguard-photo">
+                </div>
+                <div class="card-text-side">
+                  <div class="ops-num">XIII</div>
+                  <h3 class="ops-title">ATLAS CORE</h3>
+                  <div class="ops-role">Technical team</div>
+                </div>
               </div>
 
               <!-- KPI Card 14 -->
-              <div class="ops-kpi-card">
-                <div class="ops-num">XIV</div>
-                <div class="ops-icon">🎪</div>
-                <h3 class="ops-title">HERMES PRODUCTION</h3>
-                <div class="ops-role">Event Handling Team</div>
+              <div class="ops-kpi-card has-photo">
+                <div class="card-photo-side">
+                  <img src="/images/hermes_new.jpg" alt="HERMES PRODUCTION" class="vanguard-photo">
+                </div>
+                <div class="card-text-side">
+                  <div class="ops-num">XIV</div>
+                  <h3 class="ops-title">HERMES PRODUCTION</h3>
+                  <div class="ops-role">Event Handling Team</div>
+                </div>
               </div>
 
               <!-- KPI Card 15 -->
-              <div class="ops-kpi-card">
-                <div class="ops-num">XV</div>
-                <div class="ops-icon">🤝</div>
-                <h3 class="ops-title">CHIRON ALLIANCE</h3>
-                <div class="ops-role">Volunteer team</div>
+              <div class="ops-kpi-card has-photo">
+                <div class="card-photo-side">
+                  <img src="/images/chiron_new.jpg" alt="CHIRON ALLIANCE" class="vanguard-photo">
+                </div>
+                <div class="card-text-side">
+                  <div class="ops-num">XV</div>
+                  <h3 class="ops-title">CHIRON ALLIANCE</h3>
+                  <div class="ops-role">Volunteer team</div>
+                </div>
               </div>
 
               <!-- KPI Card 16 -->
-              <div class="ops-kpi-card">
-                <div class="ops-num">XVI</div>
-                <div class="ops-icon">📢</div>
-                <h3 class="ops-title">PHEME</h3>
-                <div class="ops-role">Public Relation & Marketing</div>
+              <div class="ops-kpi-card has-photo">
+                <div class="card-photo-side">
+                  <img src="/images/pheme_new.jpg" alt="PHEME" class="vanguard-photo">
+                </div>
+                <div class="card-text-side">
+                  <div class="ops-num">XVI</div>
+                  <h3 class="ops-title">PHEME</h3>
+                  <div class="ops-role">Public Relation & Marketing</div>
+                </div>
               </div>
             </div>
 
@@ -1168,7 +1191,7 @@ class OdysseyApp {
 
   /* ─── Trigger Weapon Arrow Flight & Open Registration Modal ─── */
   triggerWeaponArrow(trackTitle) {
-    audioSystem.playTriumph();
+    // audioSystem.playTriumph(); // Disabled clicking sound from realm page KPI cards
 
     const overlay = document.getElementById('weapon-arrow-overlay');
     const wrapper = document.getElementById('weapon-arrow-wrapper');
