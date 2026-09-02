@@ -22,15 +22,50 @@ class OdysseyApp {
       this.handleSymbolClick(symbolId);
     });
 
-    // 1.1 Closed Scroll Trigger to open map (clicking on Touch button unrolls it vertically)
+    // 1.1 Opening Page Screen & Scroll Fall Down Entrance Trigger
     const mapContainer = document.getElementById('map-container');
     const mapWrapper = document.getElementById('map-wrapper');
     const touchBtn = document.getElementById('scroll-touch-btn');
+    const introScreen = document.getElementById('intro-opening-screen');
+    const introVideo = document.getElementById('intro-bg-video');
 
-    // Trigger entrance slide-in animation for the actual cylindrical closed scroll (mapWrapper)
-    setTimeout(() => {
-      mapWrapper?.classList.add('slide-in');
-    }, 200);
+    const transitionToMap = () => {
+      if (introScreen && !introScreen.classList.contains('fade-out')) {
+        introScreen.classList.add('fade-out');
+        setTimeout(() => {
+          introScreen.style.display = 'none';
+          mapWrapper?.classList.add('slide-in');
+        }, 600);
+      }
+    };
+
+    if (introVideo) {
+      introVideo.muted = false;
+      
+      introVideo.play().catch(() => {
+        // If browser policy restricts unmuted autoplay, play on first interaction
+        const enableAudioOnUserAction = () => {
+          if (introVideo) {
+            introVideo.muted = false;
+            introVideo.play();
+          }
+          document.removeEventListener('click', enableAudioOnUserAction);
+          document.removeEventListener('keydown', enableAudioOnUserAction);
+        };
+        document.addEventListener('click', enableAudioOnUserAction);
+        document.addEventListener('keydown', enableAudioOnUserAction);
+      });
+
+      // When opening page video finishes, automatically fall down the map scroll
+      introVideo.addEventListener('ended', () => {
+        transitionToMap();
+      });
+    }
+
+    // Optional click on intro screen to skip video directly
+    introScreen?.addEventListener('click', () => {
+      transitionToMap();
+    });
 
     const openMap = () => {
       if (mapContainer && !mapContainer.classList.contains('unfolded')) {
@@ -319,6 +354,12 @@ class OdysseyApp {
       return;
     }
 
+    // Special "Odyssey" layout for the Odyssey page
+    if (data.id === 'odyssey') {
+      this.renderOdysseyPage(container, data);
+      return;
+    }
+
     container.innerHTML = `
       <!-- Hero Section -->
       <section class="page-hero" style="background-image: url('${data.heroImg}');">
@@ -477,7 +518,7 @@ class OdysseyApp {
       btn.addEventListener('click', () => {
         audioSystem.playClick();
         const tabName = btn.getAttribute('data-tab');
-        
+
         tabBtns.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
 
@@ -926,6 +967,54 @@ class OdysseyApp {
     });
   }
 
+  /* ─── Odyssey: Custom Odyssey Promo Video Page ─── */
+  renderOdysseyPage(container, data) {
+    container.innerHTML = `
+      <div class="realms-cover-wrapper" style="background-image: url('${data.heroImg}');">
+        <div class="realms-cover-overlay">
+          <div class="voyage-header-bar">
+            <button class="back-map-btn" id="back-to-map-btn">
+              <span>&larr;</span> Return to Map
+            </button>
+          </div>
+
+          <section class="odyssey-promo-section" style="max-width: 1400px; margin: 1rem auto 4rem; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 2.2rem; padding: 0 1.5rem;">
+            <h1 class="hackathon-heading" style="margin-top: 1rem;">THE QUEST TRAILER</h1>
+
+            <div class="aboutus-divider">
+              <span class="aboutus-divider-icon">🏛️</span>
+            </div>
+
+            <div class="legion-kpi-card promo-video-card" style="width: 100%; max-width: 1300px; padding: 2rem !important; background: rgba(16, 10, 5, 0.85); border: 2px solid var(--border-gold); border-radius: 20px; box-shadow: 0 15px 45px rgba(0, 0, 0, 0.95); display: flex; flex-direction: column; align-items: center; gap: 1.5rem;">
+              <div class="promo-video-wrapper" style="width: 100%; border-radius: 12px; overflow: hidden; border: 1.5px solid rgba(255, 215, 0, 0.2); box-shadow: 0 8px 30px rgba(0, 0, 0, 0.9);">
+                <video controls autoplay loop muted playsinline preload="auto" style="width: 100%; height: auto; display: block;">
+                  <source src="/odysseynoaudio.mp4" type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+            </div>
+
+            <!-- Allies / Sponsors Heading Section -->
+            <div class="allies-header-section" style="margin-top: 2rem; width: 100%;">
+              <h2 class="hackathon-heading" style="font-size: 2.2rem; margin-bottom: 0.5rem;">THE ALLIES OF ODYSSEY</h2>
+              <p class="hackathon-tagline" style="font-size: 1.1rem; max-width: 800px; margin: 0 auto;">Every great voyage needs powerful allies—our sponsors make this journey possible</p>
+              
+              <div class="aboutus-divider" style="margin-top: 1.5rem;">
+                <span class="aboutus-divider-icon">🛡️</span>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    `;
+
+    // Back button
+    document.getElementById('back-to-map-btn')?.addEventListener('click', () => {
+      audioSystem.playClick();
+      this.showMapView();
+    });
+  }
+
   /* ─── Legions: Custom Legions & Leadership Page (15 KPI Cards) ─── */
   renderLegionsPage(container, data) {
     container.innerHTML = `
@@ -1214,7 +1303,7 @@ class OdysseyApp {
     setTimeout(() => {
       if (trackSelect) trackSelect.value = trackTitle;
       if (trackHeading) trackHeading.textContent = `Register: ${trackTitle}`;
-      
+
       const form = document.getElementById('reg-form');
       const successMsg = document.getElementById('reg-success-msg');
       if (form) form.style.display = 'block';

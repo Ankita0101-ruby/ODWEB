@@ -1217,54 +1217,70 @@
 .high-king-card {
   border-color: #ffd700;
   box-shadow: 0 10px 35px rgba(255, 215, 0, 0.25);
-  min-height: 200px !important;
-  height: 200px !important;
-  max-width: 200px !important;
-  width: 200px !important;
+  min-height: 640px !important;
+  height: 640px !important;
+  max-width: 450px !important;
+  width: 100% !important;
   margin: 0 auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  padding: 0 !important;
+  overflow: hidden !important;
 }
 
 .high-king-card .card-photo-side {
-  height: 110px !important;
+  width: 100% !important;
+  height: 70% !important;
+  border-right: none !important;
+  border-bottom: 2px solid rgba(243, 156, 18, 0.25) !important;
+}
+
+.high-king-card .card-photo-side img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center top !important;
 }
 
 .high-king-card .card-text-side {
-  height: 90px !important;
-  padding: 0.4rem 0.6rem !important;
+  width: 100% !important;
+  height: 30% !important;
+  padding: 1.6rem 1.5rem !important;
   display: flex !important;
   flex-direction: column !important;
-  align-items: center !important;
-  justify-content: center !important;
-  text-align: center !important;
-  gap: 0.2rem !important;
+  align-items: flex-start !important;
+  justify-content: flex-start !important;
+  text-align: left !important;
+  gap: 0.5rem !important;
 }
 
 .high-king-card .legion-card-title {
-  font-size: 0.9rem !important;
+  font-size: 1.25rem !important;
   margin: 0 !important;
   line-height: 1.2 !important;
-  text-align: center !important;
+  text-align: left !important;
 }
 
 .high-king-card .legion-name {
-  font-size: 1.05rem !important;
+  font-size: 1.4rem !important;
   margin: 0 !important;
   line-height: 1.2 !important;
-  text-align: center !important;
+  text-align: left !important;
 }
 
 .high-king-card .legion-role {
-  font-size: 0.72rem !important;
+  font-size: 0.82rem !important;
   margin: 0 !important;
   line-height: 1.2 !important;
-  text-align: center !important;
+  text-align: left !important;
 }
 
 @media (min-width: 781px) {
   .high-king-card {
     grid-column: 1 / span 2;
     justify-self: center;
-    width: 200px !important;
+    width: 450px !important;
   }
 }
 
