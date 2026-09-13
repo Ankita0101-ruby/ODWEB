@@ -29,6 +29,9 @@
     </video>
   </div>
 
+  <!-- AUTOMATIC BACKGROUND SOUNDTRACK -->
+  <audio id="odyssey-bg-music" src="/bowXclench.mp3.mpeg" autoplay loop playsinline preload="auto"></audio>
+
   <!-- Background Ambient Particle Canvas -->
   <canvas id="particle-canvas"></canvas>
 
@@ -44,7 +47,7 @@
 
 
 
-    <!-- Header Controls (Removed audio & guide buttons as requested) -->
+    <!-- Header Controls -->
     <div class="header-controls"></div>
   </header>
 
@@ -53,19 +56,10 @@
 
     <!-- VIEW 1: INTERACTIVE CONSTANT HISTORICAL MAP -->
     <section id="map-view" class="view-section active">
-      <div class="map-container" id="map-container">
+      <div class="map-container unfolded" id="map-container">
 
         <!-- Constant Parchment Map Graphic Frame -->
-        <div class="map-wrapper" id="map-wrapper">
-          <!-- 3D Parchment Folding Flaps Overlay (Opens Vertically) -->
-          <div class="map-fold-flap flap-top">
-            <div class="flap-texture"></div>
-            <div class="scroll-roll-cylinder roll-top-cylinder"></div>
-          </div>
-          <div class="map-fold-flap flap-bottom">
-            <div class="flap-texture"></div>
-            <div class="scroll-roll-cylinder roll-bottom-cylinder"></div>
-          </div>
+        <div class="map-wrapper slide-in" id="map-wrapper">
           <video autoplay loop muted playsinline class="map-bg-img">
             <source src="/Video Project 9.mp4" type="video/mp4">
           </video>
@@ -232,9 +226,6 @@
 
 
 
-
-        <!-- Small Touch Button for Unrolling Map -->
-        <button class="scroll-touch-btn" id="scroll-touch-btn">Touch</button>
 
       </div><!-- /.map-container -->
     </section>
@@ -525,9 +516,6 @@
         <polygon points="160,16 132,3 138,16 132,29" fill="#ffd700" filter="url(#arrowGlow)" />
         <polygon points="160,16 138,10 142,16 138,22" fill="#ffffff" />
       </svg>
-    </div>
-  </div>
-
   <script type="module" src="./src/scripts/app.js"></script>
 </body>
 

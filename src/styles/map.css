@@ -21,45 +21,13 @@
   position: relative;
   width: 100%;
   height: 100%;
-  aspect-ratio: 1024 / 819;
-  margin: auto;
-  transform-style: preserve-3d;
-  transition: max-width 4.5s cubic-bezier(0.25, 1, 0.3, 1),
-    max-height 4.5s cubic-bezier(0.25, 1, 0.3, 1),
-    transform 4.5s cubic-bezier(0.25, 1, 0.3, 1),
-    opacity 1.5s ease;
-  opacity: 0;
-  pointer-events: none;
-}
-
-/* Closed State (positioned off-screen at the top) */
-.map-container:not(.unfolded) .map-wrapper {
-  max-width: 600px;
-  max-height: 96px;
-  transform: scale(0.9) rotateX(15deg) translateY(-100vh);
-}
-
-/* Slide-in State with falling animation */
-.map-container:not(.unfolded) .map-wrapper.slide-in {
-  opacity: 1;
-  pointer-events: auto;
-  animation: scrollFallFromUp 1.5s cubic-bezier(0.25, 1, 0.3, 1) forwards;
-}
-
-/* 3D hover/tilt effect when closed */
-.map-container:not(.unfolded) .map-wrapper.slide-in:hover {
-  transform: scale(0.92) rotateX(18deg) translateY(-4px);
-  box-shadow: 0 15px 40px rgba(243, 156, 18, 0.15);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-/* Unfolded State (Opened Map with majestic 3D unrolling animation) */
-.map-container.unfolded .map-wrapper {
   max-width: 1200px;
   max-height: 960px;
+  aspect-ratio: 1024 / 819;
+  margin: auto;
   opacity: 1;
   pointer-events: auto;
-  animation: unroll3D 4.5s cubic-bezier(0.25, 1, 0.3, 1) forwards;
+  transform: none;
 }
 
 /* Ancient Parchment Folding Flaps Overlay (Opens Vertically via Rolling) */
@@ -514,15 +482,6 @@
   text-align: center;
   max-width: 500px;
   width: 85%;
-  transition: opacity 1.5s ease;
-}
-
-.map-container:not(.unfolded) .parchment-scroll-banner {
-  opacity: 0;
-  pointer-events: none;
-}
-
-.map-container.unfolded .parchment-scroll-banner {
   opacity: 1;
   pointer-events: auto;
 }
@@ -555,15 +514,6 @@
   z-index: 30;
   font-family: var(--font-heading);
   font-size: 0.75rem;
-  transition: opacity 1.5s ease;
-}
-
-.map-container:not(.unfolded) .map-footer-bar {
-  opacity: 0;
-  pointer-events: none;
-}
-
-.map-container.unfolded .map-footer-bar {
   opacity: 1;
   pointer-events: auto;
 }
@@ -588,109 +538,10 @@
   font-style: italic;
 }
 
-/* Fade in map components only when unfolded */
-.map-container:not(.unfolded) .map-bg-img,
-.map-container:not(.unfolded) .map-svg-overlay,
-.map-container:not(.unfolded) .map-pin {
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 1.5s ease;
-}
-
-.map-container.unfolded .map-bg-img,
-.map-container.unfolded .map-svg-overlay,
-.map-container.unfolded .map-pin {
+/* Map components visibility */
+.map-bg-img,
+.map-svg-overlay,
+.map-pin {
   opacity: 1;
   pointer-events: auto;
-  transition: opacity 2.5s ease 2.0s;
-  /* fade in slowly after scroll opens */
-}
-
-/* Small Touch Button */
-.scroll-touch-btn {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0.9);
-  padding: 0.5rem 1.6rem;
-  font-family: 'Cinzel Decorative', 'Cinzel', serif;
-  font-size: 0.95rem;
-  font-weight: 700;
-  letter-spacing: 2px;
-  color: #ffffff;
-  background: radial-gradient(circle, #f39c12 0%, #b78103 100%);
-  border: 1.5px solid #ffd700;
-  border-radius: 20px;
-  box-shadow: 0 0 10px rgba(243, 156, 18, 0.65), inset 0 0 6px rgba(255, 255, 255, 0.35);
-  cursor: pointer;
-  opacity: 0;
-  z-index: 310;
-  /* Above cylinders */
-  pointer-events: none;
-  transition: opacity 0.8s ease 1.8s, transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.map-wrapper.slide-in~.scroll-touch-btn {
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(1);
-  pointer-events: auto;
-}
-
-.map-container.unfolded .scroll-touch-btn {
-  opacity: 0;
-  transform: translate(-50%, -50%) scale(0.8);
-  pointer-events: none;
-  transition: opacity 0.5s ease, transform 0.5s ease;
-}
-
-.scroll-touch-btn:hover {
-  transform: translate(-50%, -50%) scale(1.05);
-  box-shadow: 0 0 15px rgba(255, 215, 0, 0.85), inset 0 0 8px rgba(255, 255, 255, 0.45);
-}
-
-/* --- 3D ANIMATION KEYFRAMES --- */
-
-/* Bouncing fall-down animation from above */
-@keyframes scrollFallFromUp {
-  0% {
-    transform: scale(0.7) rotateX(25deg) translateY(-120vh);
-    opacity: 0;
-  }
-
-  55% {
-    transform: scale(0.9) rotateX(15deg) translateY(15px);
-    opacity: 1;
-  }
-
-  70% {
-    transform: scale(0.88) rotateX(12deg) translateY(-8px);
-  }
-
-  85% {
-    transform: scale(0.9) rotateX(15deg) translateY(3px);
-  }
-
-  100% {
-    transform: scale(0.9) rotateX(15deg) translateY(0);
-    opacity: 1;
-  }
-}
-
-/* Majestic 3D tilting unroll animation */
-@keyframes unroll3D {
-  0% {
-    transform: scale(0.9) rotateX(15deg) rotateY(-15deg) rotateZ(2deg);
-  }
-
-  35% {
-    transform: scale(0.94) rotateX(26deg) rotateY(10deg) rotateZ(-3deg);
-  }
-
-  70% {
-    transform: scale(0.98) rotateX(-8deg) rotateY(-5deg) rotateZ(1deg);
-  }
-
-  100% {
-    transform: scale(1) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
-  }
 }

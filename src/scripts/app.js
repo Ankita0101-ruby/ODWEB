@@ -14,22 +14,18 @@ class OdysseyApp {
   }
 
   init() {
-    // 0. Initialize Background Music
-    audioSystem.playBackgroundMusic();
-
     // 1. Initialize Interactive Map
     this.odysseyMap = new OdysseyMap('map-container', 'map-wrapper', (symbolId) => {
       this.handleSymbolClick(symbolId);
     });
 
-    // 1.1 Opening Page Screen & Scroll Fall Down Entrance Trigger
-    const mapContainer = document.getElementById('map-container');
+    // 1.1 Opening Page Screen & Entrance Trigger
     const mapWrapper = document.getElementById('map-wrapper');
-    const touchBtn = document.getElementById('scroll-touch-btn');
     const introScreen = document.getElementById('intro-opening-screen');
     const introVideo = document.getElementById('intro-bg-video');
 
     const transitionToMap = () => {
+      audioSystem.playBackgroundMusic();
       if (introScreen && !introScreen.classList.contains('fade-out')) {
         introScreen.classList.add('fade-out');
         setTimeout(() => {
@@ -41,42 +37,23 @@ class OdysseyApp {
 
     if (introVideo) {
       introVideo.muted = false;
-      
       introVideo.play().catch(() => {
-        // If browser policy restricts unmuted autoplay, play on first interaction
-        const enableAudioOnUserAction = () => {
-          if (introVideo) {
-            introVideo.muted = false;
-            introVideo.play();
-          }
-          document.removeEventListener('click', enableAudioOnUserAction);
-          document.removeEventListener('keydown', enableAudioOnUserAction);
-        };
-        document.addEventListener('click', enableAudioOnUserAction);
-        document.addEventListener('keydown', enableAudioOnUserAction);
+        introVideo.muted = true;
+        introVideo.play().catch(() => {});
       });
 
-      // When opening page video finishes, automatically fall down the map scroll
+      audioSystem.playBackgroundMusic();
+
+      // When opening page video finishes, automatically transition to map
       introVideo.addEventListener('ended', () => {
         transitionToMap();
       });
     }
 
-    // Optional click on intro screen to skip video directly
+    // Optional click on intro screen to transition to map
     introScreen?.addEventListener('click', () => {
+      audioSystem.playBackgroundMusic();
       transitionToMap();
-    });
-
-    const openMap = () => {
-      if (mapContainer && !mapContainer.classList.contains('unfolded')) {
-        // audioSystem.playTriumph(); // Disabled click sound on map scroll open
-        mapContainer.classList.add('unfolded');
-      }
-    };
-
-    touchBtn?.addEventListener('click', (e) => {
-      e.stopPropagation();
-      openMap();
     });
 
     // 2. Setup Top Header Nav Pill Click Handlers
@@ -102,13 +79,7 @@ class OdysseyApp {
       this.showMapView();
     });
 
-    // 4. Audio Control Toggle
-    const soundBtn = document.getElementById('sound-btn');
-    soundBtn?.addEventListener('click', () => {
-      const isSoundOn = audioSystem.toggleSound();
-      soundBtn.querySelector('.btn-icon').textContent = isSoundOn ? '🔊' : '🔇';
-      soundBtn.querySelector('.btn-text').textContent = isSoundOn ? 'Audio On' : 'Audio Off';
-    });
+
 
     // 5. Guide Modal Toggle
     const guideBtn = document.getElementById('guide-btn');
@@ -868,7 +839,7 @@ class OdysseyApp {
                   <div class="timeline-content">
                     <div class="timeline-header">
                       <h3 class="timeline-title">The Call to Quest</h3>
-                      <span class="timeline-date">9th Sept 2026</span>
+                      <span class="timeline-date">16th Sept 2026</span>
                     </div>
                     <p class="timeline-desc">The call has been made—step forward, embrace the challenge, and begin your journey to innovation.</p>
                   </div>
@@ -880,7 +851,7 @@ class OdysseyApp {
                   <div class="timeline-content">
                     <div class="timeline-header">
                       <h3 class="timeline-title">The Final Call</h3>
-                      <span class="timeline-date">25th Sept 2026</span>
+                      <span class="timeline-date">30th Sept 2026</span>
                     </div>
                     <p class="timeline-desc">The final call is here—take your last step forward and claim your place in the ODYSSEY.</p>
                   </div>
@@ -892,7 +863,7 @@ class OdysseyApp {
                   <div class="timeline-content">
                     <div class="timeline-header">
                       <h3 class="timeline-title">Interaction with Mortals</h3>
-                      <span class="timeline-date">29th Sept & 30th Sept 2026</span>
+                      <span class="timeline-date">1st Oct & 2nd Oct 2026</span>
                     </div>
                     <p class="timeline-desc">Where innovators meet, ideas speak, and the worthy are chosen for the next quest.</p>
                   </div>
@@ -904,7 +875,7 @@ class OdysseyApp {
                   <div class="timeline-content">
                     <div class="timeline-header">
                       <h3 class="timeline-title">Call for Final Verdict</h3>
-                      <span class="timeline-date">3rd Oct 2026</span>
+                      <span class="timeline-date">5th Oct 2026</span>
                     </div>
                     <p class="timeline-desc">The final verdict is cast—only the worthy shall advance to the next realm.</p>
                   </div>
@@ -916,7 +887,7 @@ class OdysseyApp {
                   <div class="timeline-content">
                     <div class="timeline-header">
                       <h3 class="timeline-title">The ODYSSEY BEGINS</h3>
-                      <span class="timeline-date">9th Oct & 10th Oct 2026</span>
+                      <span class="timeline-date">13th Oct & 14th Oct 2026</span>
                     </div>
                     <p class="timeline-desc">The hour has come—the chosen embark on their ultimate journey to innovation.</p>
                   </div>
@@ -928,7 +899,7 @@ class OdysseyApp {
                   <div class="timeline-content">
                     <div class="timeline-header">
                       <h3 class="timeline-title">The Conquerors</h3>
-                      <span class="timeline-date">10th Oct 2026</span>
+                      <span class="timeline-date">14th Oct 2026</span>
                     </div>
                     <p class="timeline-desc">From mere mortals to mighty champions—their courage and vision have earned them a place among the legends.</p>
                   </div>
@@ -987,7 +958,7 @@ class OdysseyApp {
 
             <div class="legion-kpi-card promo-video-card" style="width: 100%; max-width: 1300px; padding: 2rem !important; background: rgba(16, 10, 5, 0.85); border: 2px solid var(--border-gold); border-radius: 20px; box-shadow: 0 15px 45px rgba(0, 0, 0, 0.95); display: flex; flex-direction: column; align-items: center; gap: 1.5rem;">
               <div class="promo-video-wrapper" style="width: 100%; border-radius: 12px; overflow: hidden; border: 1.5px solid rgba(255, 215, 0, 0.2); box-shadow: 0 8px 30px rgba(0, 0, 0, 0.9);">
-                <video controls autoplay loop muted playsinline preload="auto" style="width: 100%; height: auto; display: block;">
+                <video autoplay loop muted playsinline preload="auto" style="width: 100%; height: auto; display: block;">
                   <source src="/odysseynoaudio.mp4" type="video/mp4" />
                   Your browser does not support the video tag.
                 </video>
